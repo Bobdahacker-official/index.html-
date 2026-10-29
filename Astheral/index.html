@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f4ef"><meta name="description" content="Astheral — a thoughtful AI workspace for conversation, code, and things worth making."><title>Astheral — A space to think. A place to build.</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23dd744f'/%3E%3Cpath d='M32 10L38 26L54 32L38 38L32 54L26 38L10 32L26 26Z' fill='%23fff5e7'/%3E%3C/svg%3E"><link rel="stylesheet" href="./styles.css"></head>
+<body>
+<div class="app" id="app">
+<aside class="sidebar" id="sidebar" aria-label="Sidebar">
+ <a href="./" class="brand" aria-label="Astheral home"><span class="brand-mark">✳</span><span>Astheral<span class="brand-dot">.</span></span></a>
+ <button class="new-chat" id="new-chat"><span data-icon="plus"></span>New conversation<span class="shortcut">⌘ K</span></button>
+ <div class="nav-label">YOUR WORKSPACE</div>
+ <nav class="spaces" aria-label="Modes"><button data-mode="chat" class="space active"><span data-icon="chat"></span>Chat<span class="nav-tag">Think</span></button><button data-mode="code" class="space"><span data-icon="code"></span>Code<span class="nav-tag">Build</span></button></nav>
+ <div class="history-heading"><span class="nav-label">RECENT CONVERSATIONS</span><button class="icon-button" id="export-chat" title="Export current conversation" aria-label="Export current conversation"><span data-icon="export"></span></button></div>
+ <div class="history" id="history"></div>
+ <div class="sidebar-bottom"><div class="local-note"><span class="status-dot"></span><div><strong>Your space. Your device.</strong><span>Conversations are saved locally.</span></div><span data-icon="shield"></span></div>
+ <button class="profile" id="settings-sidebar"><span class="avatar">A</span><span><strong>Personal workspace</strong><small>Make yourself at home</small></span><span data-icon="settings"></span></button></div>
+</aside>
+<div class="sidebar-shade" id="sidebar-shade"></div>
+<main class="main">
+ <header class="topbar"><div class="breadcrumb"><button class="icon-button mobile-menu" id="menu" aria-label="Open sidebar"><span data-icon="menu"></span></button><span>Workspace</span><span class="slash">/</span><strong id="mode-label">Chat</strong></div><div class="top-actions"><span class="private-label"><span data-icon="lock"></span>Private by default</span><button class="model-button" id="models"><span class="status-dot"></span><span id="engine-label">Local skills</span><span data-icon="chevron"></span></button><button class="icon-button" id="theme" aria-label="Toggle dark theme" title="Toggle theme"><span data-icon="moon"></span></button></div></header>
+ <div class="workarea" id="workarea"><div class="chat-column">
+ <div class="scroll-area" id="scroll-area">
+ <section class="welcome" id="welcome">
+  <div class="welcome-topline"><span class="little-star">✳</span> A SPACE FOR WHAT’S NEXT</div>
+  <div class="orbit-art" aria-hidden="true"><svg viewBox="0 0 160 130" fill="none"><ellipse cx="80" cy="65" rx="68" ry="26" transform="rotate(-30 80 65)"/><ellipse cx="80" cy="65" rx="68" ry="26" transform="rotate(30 80 65)"/><ellipse cx="80" cy="65" rx="58" ry="25" transform="rotate(90 80 65)"/><path d="M80 34L88 56L110 65L88 73L80 96L72 73L50 65L72 56Z"/><circle cx="133" cy="35" r="5"/><circle cx="40" cy="99" r="3"/></svg></div>
+  <h1 id="welcome-title">A little curiosity.<br><span>A lot of possibility.</span></h1>
+  <p class="welcome-copy" id="welcome-copy">Think out loud. Untangle an idea. Make something new.<br>Whatever’s on your mind, start here.</p>
+  <div class="mode-switch" aria-label="Choose mode"><button data-mode="chat" class="active"><span data-icon="chat"></span>Let’s chat</button><button data-mode="code"><span data-icon="code"></span>Let’s build</button></div>
+  <div class="suggestions" id="suggestions"></div>
+  <button class="full-ai-hint" id="full-ai-hint"><span data-icon="sparkle"></span><span>More possibilities with Browser AI</span><span data-icon="arrow-right"></span></button>
+ </section>
+ <section class="messages" id="messages" aria-label="Conversation" aria-live="off"></section>
+ </div>
+ <div class="composer-zone"><div id="attachment" class="attachment" hidden></div><div class="composer" id="composer"><textarea id="prompt" rows="1" aria-label="Message Astheral" placeholder="Ask, imagine, or start with a thought…" maxlength="16000"></textarea><div class="composer-bottom"><div class="composer-tools"><button class="icon-button" id="attach" title="Attach a text file" aria-label="Attach a text file"><span data-icon="plus"></span></button><span class="composer-mode" id="composer-mode"><span data-icon="chat"></span>Chat</span></div><div class="send-tools"><span class="enter-hint">↵ to send</span><button class="send" id="send" title="Send message" aria-label="Send message" disabled><span data-icon="arrow-up"></span></button></div></div></div><div class="composer-caption"><span id="engine-caption">Local skills are ready. Load Browser AI for open-ended conversation.</span><span class="caption-star">✳</span></div></div>
+ </div>
+ <aside class="files-panel" id="files-panel" aria-label="Generated files"><div class="files-header"><div><span class="nav-label">YOUR OUTPUT</span><h2>The things you make.</h2></div><span data-icon="files"></span></div><div id="file-list" class="file-list"></div><button class="zip-button" id="download-all" hidden><span data-icon="download"></span>Download project .zip</button><div class="files-tip"><span data-icon="sparkle"></span><p>From a small idea<br>to a real, working file.</p></div></aside>
+ </div>
+</main>
+</div>
+<dialog id="settings" class="settings-dialog"><div class="dialog-header"><div><div class="nav-label">MAKE IT YOURS</div><h2>A mind for every mode.</h2></div><button class="icon-button" id="close-settings" aria-label="Close models"><span data-icon="close"></span></button></div><p class="dialog-intro">Start with local skills, or bring a full language model into your browser.</p>
+ <label class="engine-option"><input type="radio" name="engine" value="local" checked><span class="engine-option-icon" data-icon="bolt"></span><span><strong>Local skills <em>READY NOW</em></strong><small>Two trained skill classifiers. Basic chat tools and eight complete code recipes. No download.</small></span></label>
+ <label class="engine-option"><input type="radio" name="engine" value="browser"><span class="engine-option-icon" data-icon="sparkle"></span><span><strong>Browser AI <em>NO API KEY</em></strong><small>Freeform Chat and Code with pretrained Qwen models. Runs on your GPU after a first download.</small></span></label>
+ <label class="engine-option" id="server-option" hidden><input type="radio" name="engine" value="server"><span class="engine-option-icon" data-icon="server"></span><span><strong>Connected server</strong><small id="server-description">Configured by the workspace owner.</small></span></label>
+ <div class="model-quality"><label for="quality">Browser model size</label><select id="quality"><option value="small">Light · 0.5B parameters</option><option value="balanced">Balanced · 1.5B parameters</option></select><small>Chat and Code each load a separate model. A compatible WebGPU browser and internet access are required for the initial download. Allow roughly 1–2 GB of available GPU memory.</small></div>
+ <div class="load-progress" id="load-progress" hidden><progress id="progress" value="0" max="1"></progress><p id="progress-text" role="status">Preparing…</p></div><p id="model-error" class="error-text" role="alert" hidden></p>
+ <div class="dialog-footer"><button class="text-button" id="model-info">About the training</button><button class="primary-button" id="apply-model">Use selected engine<span data-icon="arrow-right"></span></button></div><p class="training-info" id="training-info" hidden>Astheral’s Chat and Code skill classifiers were trained separately from scratch on 120 and 100 examples. They select built-in tools and responses. Qwen’s generative language models are pretrained by their original authors; Astheral does not claim to have trained or fine-tuned those weights. Local skill replies are limited. Browser AI enables open-ended generation.</p>
+</dialog>
+<dialog id="file-dialog" class="file-dialog"><div class="dialog-header"><h2 id="file-title">File</h2><div class="row"><button class="text-button" id="file-preview">Preview</button><button class="primary-button" id="file-download"><span data-icon="download"></span>Download</button><button class="icon-button" id="close-file" aria-label="Close file"><span data-icon="close"></span></button></div></div><pre id="file-source"></pre><iframe id="file-frame" title="Sandboxed generated webpage preview" sandbox="allow-scripts" hidden></iframe></dialog>
+<input type="file" id="file-input" accept=".txt,.md,.json,.csv,.html,.css,.js,.ts,.py,.svg,.yaml,.yml,.xml,.sql" hidden>
+<div class="toast" id="toast" role="status" hidden></div><div class="sr-only" id="announcement" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body></html>
