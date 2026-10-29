@@ -211,8 +211,8 @@ int require_system() {
     return 0;
 }
 
-int require_bti_only() {
-    if (current_user == USER_BTI) return 1;
+int require_bti_or_system() {
+    if (current_user == USER_BTI || current_user == USER_SYSTEM) return 1;
     print_string("Access denied.\n", 0x07);
     return 0;
 }
@@ -247,13 +247,17 @@ void handle_help() {
     print_string("  help               - Show this message\n", 0x07);
     print_string("  whoami             - Display current user\n", 0x07);
     print_string("  users              - Show user list\n", 0x07);
-    print_string("  users switch NAME [-s] - Switch user; -s skips SYSTEM warnings\n", 0x07);
-    print_string("  echo TEXT          - Print text (BTI only)\n", 0x07);
-    print_string("  clear              - Clear screen (BTI only)\n", 0x07);
+    print_string("  users switch NAME  - Switch user\n", 0x07);
+    if (current_user == USER_BTI || current_user == USER_SYSTEM) {
+        print_string("  echo TEXT          - Print text\n", 0x07);
+        print_string("  clear              - Clear screen\n", 0x07);
+    }
     print_string("  allowcommands      - Check account permissions\n", 0x07);
-    print_string("SYSTEM filesystem commands (ls/cd also in temporary sessions):\n", 0x07);
-    print_string("  ls [path]          - List files\n", 0x07);
-    print_string("  cd [path]          - Change directory\n", 0x07);
+    if (current_user >= USER_SYSTEM) {
+        print_string("  ls [path]          - List files\n", 0x07);
+        print_string("  cd [path]          - Change directory\n", 0x07);
+    }
+    if (current_user != USER_SYSTEM) { newline(); return; }
     print_string("  pwd                - Print current directory\n", 0x07);
     print_string("  mkdir NAME         - Make a directory\n", 0x07);
     print_string("  rmdir NAME         - Remove an empty directory\n", 0x07);
@@ -367,8 +371,7 @@ void handle_users_switch(const char *target) {
                     current_user = USER_TEMP_SYSTEM;
                     ceasefire_installed = 0;
                     sds_enabled = 0;
-                    print_string("TEMP_SYSTEM session started. Only ls/cd and the Ceasefire setup flow are available.\n", 0x07);
-                    print_string("Run: Ceasefire install system jailbreaker 5000\n", 0x07);
+                    print_string("TEMP_SYSTEM session started.\n", 0x07);
                 } else {
                     current_user = target_user;
                     print_string("Login successful\n", 0x07);
@@ -387,7 +390,7 @@ void handle_users_switch(const char *target) {
 }
 
 void handle_allowcommands() {
-    if (current_user == USER_USER) {
+    if (current_user != USER_BTI && current_user != USER_SYSTEM) {
         print_string("Requires BetterTrustedInstaller permissions.\n", 0x07);
     } else if (current_user == USER_BTI) {
         print_string("Error: Cannot access system! Need privileges of SYSTEM\n", 0x07);
@@ -434,20 +437,20 @@ void jailbreak_screen() {
 void handle_ceasefire(const char *arg) {
     if (strcmp_custom(arg, "install system jailbreaker 5000") == 0) {
         if (current_user != USER_TEMP_SYSTEM) {
-            print_string("Installation requires TEMP_SYSTEM.\n", 0x07);
+            print_string("Access denied.\n", 0x07);
             return;
         }
         ceasefire_installed = 1;
-        print_string("System jailbreaker 5000 installed. Run ceasefire.\n", 0x07);
+        print_string("Package Installed\n", 0x07);
         return;
     }
     if (!ceasefire_installed) {
-        print_string("Ceasefire is not installed.\n", 0x07);
+        print_string("Package not installed.\n", 0x07);
         return;
     }
     if (strcmp_custom(arg, "switchuser SYSTEM") == 0) {
         if (current_user != USER_TEMP_JB_SYSTEM) {
-            print_string("Requires TEMP-JB-SYSTEM.\n", 0x07);
+            print_string("Access denied.\n", 0x07);
             return;
         }
         current_user = USER_SYSTEM;
@@ -455,7 +458,7 @@ void handle_ceasefire(const char *arg) {
         return;
     }
     if (arg[0]) {
-        print_string("Unknown Ceasefire command.\n", 0x07);
+        print_string("Unknown command.\n", 0x07);
         return;
     }
     print_string("CEASEFIRE\n1) Exit\n2) Jailbreak BTI account\n3) Jailbreak SYSTEM account\nSelect: ", 0x07);
@@ -473,10 +476,10 @@ void handle_ceasefire(const char *arg) {
         current_user = USER_BTI;
         print_string("BetterTrustedInstaller session started.\n", 0x07);
     } else if (!sds_enabled) {
-        print_string("ERR: NOT ALLOWED, DO \"sds\" to toggle on or off\n", 0x07);
+        print_string("ERR: NOT ALLOWED\n", 0x07);
     } else {
         current_user = USER_TEMP_JB_SYSTEM;
-        print_string("TEMP-JB-SYSTEM session started.\nRun: ceasefire switchuser SYSTEM\n", 0x07);
+        print_string("TEMP-JB-SYSTEM session started.\n", 0x07);
     }
 }
 
@@ -621,13 +624,13 @@ void handle_mv(const char *arg) {
 }
 
 void handle_echo(const char *text) {
-    if (!require_bti_only()) return;
+    if (!require_bti_or_system()) return;
     if (text) print_string(text, 0x07);
     newline();
 }
 
 void handle_clear() {
-    if (!require_bti_only()) return;
+    if (!require_bti_or_system()) return;
     clear_screen();
 }
 
@@ -704,17 +707,11 @@ void parse_and_execute(const char *cmd) {
     }
     if (strcmp_custom(cmd, "sds") == 0) {
         if (current_user != USER_TEMP_SYSTEM || !ceasefire_installed) {
-            print_string("sds requires TEMP_SYSTEM and Ceasefire installation.\n", 0x07);
+            print_string("Access denied.\n", 0x07);
         } else {
             sds_enabled = !sds_enabled;
-            print_string(sds_enabled ? "sds ON. Run ceasefire and select 3.\n" : "sds OFF.\n", 0x07);
+            print_string(sds_enabled ? "sds ON.\n" : "sds OFF.\n", 0x07);
         }
-        return;
-    }
-    if (current_user == USER_TEMP_SYSTEM || current_user == USER_TEMP_JB_SYSTEM) {
-        if ((a = cmd_arg(cmd, "ls")) != NULL || (a = cmd_arg(cmd, "LS")) != NULL) handle_ls(a);
-        else if ((a = cmd_arg(cmd, "cd")) != NULL || (a = cmd_arg(cmd, "CD")) != NULL) handle_cd(a);
-        else print_string("Temporary session: only ls, cd and the Ceasefire flow are permitted.\n", 0x07);
         return;
     }
     if (strcmp_custom(cmd, "help") == 0) {
@@ -729,9 +726,9 @@ void parse_and_execute(const char *cmd) {
         handle_users_switch(cmd + 13);
     } else if (strcmp_custom(cmd, "allowcommands") == 0) {
         handle_allowcommands();
-    } else if ((a = cmd_arg(cmd, "ls")) != NULL) {
+    } else if ((a = cmd_arg(cmd, "ls")) != NULL || (a = cmd_arg(cmd, "LS")) != NULL) {
         handle_ls(a);
-    } else if ((a = cmd_arg(cmd, "cd")) != NULL) {
+    } else if ((a = cmd_arg(cmd, "cd")) != NULL || (a = cmd_arg(cmd, "CD")) != NULL) {
         handle_cd(a);
     } else if ((a = cmd_arg(cmd, "pwd")) != NULL) {
         handle_pwd();

@@ -68,18 +68,33 @@ int main(void) {
     assert(warnings == 10);
     run("LS", ""); assert(strstr(output, "boot.img"));
     run("CD /", ""); assert(fs_cwd == 0);
-    const char *denied[] = {"echo no", "clear", "pwd", "mkdir blocked", "touch blocked", "rm boot.img", "write boot.img no", "cat boot.img", "mv boot.img x", "rmdir /", "users switch User", "allowcommands", "help", "password"};
-    for (unsigned i = 0; i < sizeof(denied)/sizeof(*denied); i++) {
-        run(denied[i], ""); assert(strstr(output, "Temporary session:"));
-        assert(current_user == USER_TEMP_SYSTEM);
+    for (int account = USER_TEMP_SYSTEM; account <= USER_TEMP_JB_SYSTEM; account++) {
+        current_user = account;
+        run("help", "");
+        assert(strstr(output, "help") && strstr(output, "whoami") && strstr(output, "users"));
+        assert(strstr(output, "ls [path]") && strstr(output, "cd [path]"));
+        assert(!strstr(output, "ceasefire") && !strstr(output, "Ceasefire") && !strstr(output, "sds"));
+        assert(!strstr(output, "mkdir") && !strstr(output, "echo TEXT"));
+        run("whoami", ""); assert(strstr(output, user_names[account]));
+        run("users", ""); assert(strstr(output, "BetterTrustedInstaller"));
+        run("allowcommands", ""); assert(strstr(output, "Requires BetterTrustedInstaller permissions."));
+        const char *denied[] = {"echo no", "clear", "pwd", "mkdir blocked", "touch blocked", "rm boot.img", "write boot.img no", "cat boot.img", "mv boot.img x", "rmdir /", "password"};
+        for (unsigned i = 0; i < sizeof(denied)/sizeof(*denied); i++) {
+            run(denied[i], ""); assert(strstr(output, "denied"));
+            assert(current_user == account);
+        }
+        run("users switch User", ""); assert(current_user == USER_USER);
     }
+    current_user = USER_TEMP_SYSTEM;
     run("ceasefire switchuser SYSTEM", ""); assert(current_user == USER_TEMP_SYSTEM);
     run("Ceasefire install system jailbreaker 5000", ""); assert(ceasefire_installed);
+    assert(strcmp(output, "Package Installed\n") == 0);
     run("ceasefire", "1\n"); assert(current_user == USER_TEMP_SYSTEM);
     run("ceasefire", "9\n"); assert(strstr(output, "Invalid selection"));
     run("ceasefire", "3\n");
     assert(current_user == USER_TEMP_SYSTEM && elapsed_seconds == 12);
-    assert(strstr(output, "ERR: NOT ALLOWED, DO \"sds\" to toggle on or off"));
+    assert(strstr(output, "ERR: NOT ALLOWED"));
+    assert(!strstr(output, "sds") && !strstr(output, "Run:"));
     run("sds", ""); assert(sds_enabled);
     run("sds", ""); assert(!sds_enabled);
     run("sds", ""); assert(sds_enabled);
@@ -92,8 +107,8 @@ int main(void) {
     run("mkdir test", ""); assert(fs_find_child(0, "test") >= 0);
     run("write test/file hello", "");
     run("cat test/file", ""); assert(strstr(output, "hello"));
-    run("echo denied", ""); assert(strstr(output, "Access denied"));
-    before = clears; run("clear", ""); assert(clears == before);
+    run("echo allowed", ""); assert(strcmp(output, "allowed") == 0);
+    before = clears; run("clear", ""); assert(clears == before + 1);
     run("users switch User", ""); assert(current_user == USER_USER);
     run("echo denied", ""); assert(strstr(output, "Access denied"));
     before = clears; run("clear", ""); assert(clears == before);
