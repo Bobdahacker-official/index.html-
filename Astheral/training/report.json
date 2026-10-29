@@ -1,0 +1,300 @@
+{
+  "training_scope": "Two newly trained local skill classifiers. Pretrained Qwen generation weights are unchanged.",
+  "dataset_sha256": "8c1f064347e65eba965d1263cfa3fc637290da18f12c44cd56d11d8cd8758034",
+  "runs": [
+    {
+      "mode": "chat",
+      "architecture": "L2-normalized unigram/bigram input \u2192 learned dense softmax classifier",
+      "seed": 42,
+      "epochs": 1600,
+      "train_examples": 120,
+      "heldout_examples": 24,
+      "features": 480,
+      "parameters": 5772,
+      "train_accuracy": 1.0,
+      "heldout_accuracy": 0.9166666666666666,
+      "loss_history": [
+        {
+          "epoch": 1,
+          "loss": 2.484031
+        },
+        {
+          "epoch": 100,
+          "loss": 0.783872
+        },
+        {
+          "epoch": 400,
+          "loss": 0.159147
+        },
+        {
+          "epoch": 800,
+          "loss": 0.079311
+        },
+        {
+          "epoch": 1600,
+          "loss": 0.049106
+        }
+      ],
+      "heldout_predictions": [
+        {
+          "text": "hiya friend",
+          "expected": "greeting",
+          "predicted": "greeting"
+        },
+        {
+          "text": "hey there how is it going",
+          "expected": "greeting",
+          "predicted": "greeting"
+        },
+        {
+          "text": "tell me your name",
+          "expected": "identity",
+          "predicted": "identity"
+        },
+        {
+          "text": "what kind of assistant are you",
+          "expected": "identity",
+          "predicted": "identity"
+        },
+        {
+          "text": "thank you so much",
+          "expected": "gratitude",
+          "predicted": "gratitude"
+        },
+        {
+          "text": "thanks for your help",
+          "expected": "gratitude",
+          "predicted": "gratitude"
+        },
+        {
+          "text": "what is 17 times 13",
+          "expected": "math",
+          "predicted": "explain"
+        },
+        {
+          "text": "calculate (12 + 8) / 4",
+          "expected": "math",
+          "predicted": "math"
+        },
+        {
+          "text": "summarise the main points",
+          "expected": "summary",
+          "predicted": "summary"
+        },
+        {
+          "text": "give me a brief summary",
+          "expected": "summary",
+          "predicted": "summary"
+        },
+        {
+          "text": "create a plan for learning python",
+          "expected": "plan",
+          "predicted": "plan"
+        },
+        {
+          "text": "plan how to finish my project",
+          "expected": "plan",
+          "predicted": "plan"
+        },
+        {
+          "text": "can you suggest some ideas",
+          "expected": "ideas",
+          "predicted": "ideas"
+        },
+        {
+          "text": "help me brainstorm project ideas",
+          "expected": "ideas",
+          "predicted": "ideas"
+        },
+        {
+          "text": "explain what an API does",
+          "expected": "explain",
+          "predicted": "explain"
+        },
+        {
+          "text": "tell me how machine learning works",
+          "expected": "explain",
+          "predicted": "help"
+        },
+        {
+          "text": "I feel stressed today",
+          "expected": "feeling",
+          "predicted": "feeling"
+        },
+        {
+          "text": "I am overwhelmed with tasks",
+          "expected": "feeling",
+          "predicted": "feeling"
+        },
+        {
+          "text": "can you tell a joke",
+          "expected": "joke",
+          "predicted": "joke"
+        },
+        {
+          "text": "make a funny programming joke",
+          "expected": "joke",
+          "predicted": "joke"
+        },
+        {
+          "text": "tell me the current time",
+          "expected": "date",
+          "predicted": "date"
+        },
+        {
+          "text": "what is todays date",
+          "expected": "date",
+          "predicted": "date"
+        },
+        {
+          "text": "how to download generated code",
+          "expected": "help",
+          "predicted": "help"
+        },
+        {
+          "text": "help me enable the browser model",
+          "expected": "help",
+          "predicted": "help"
+        }
+      ],
+      "elapsed_seconds": 0.221
+    },
+    {
+      "mode": "code",
+      "architecture": "L2-normalized unigram/bigram input \u2192 learned dense softmax classifier",
+      "seed": 84,
+      "epochs": 1600,
+      "train_examples": 100,
+      "heldout_examples": 20,
+      "features": 347,
+      "parameters": 3480,
+      "train_accuracy": 1.0,
+      "heldout_accuracy": 1.0,
+      "loss_history": [
+        {
+          "epoch": 1,
+          "loss": 2.299078
+        },
+        {
+          "epoch": 100,
+          "loss": 0.548557
+        },
+        {
+          "epoch": 400,
+          "loss": 0.116311
+        },
+        {
+          "epoch": 800,
+          "loss": 0.060211
+        },
+        {
+          "epoch": 1600,
+          "loss": 0.038113
+        }
+      ],
+      "heldout_predictions": [
+        {
+          "text": "build a todo list application",
+          "expected": "todo",
+          "predicted": "todo"
+        },
+        {
+          "text": "make an app to manage tasks",
+          "expected": "todo",
+          "predicted": "todo"
+        },
+        {
+          "text": "make a working calculator",
+          "expected": "calculator",
+          "predicted": "calculator"
+        },
+        {
+          "text": "generate an arithmetic app",
+          "expected": "calculator",
+          "predicted": "calculator"
+        },
+        {
+          "text": "build an app for taking notes",
+          "expected": "notes",
+          "predicted": "notes"
+        },
+        {
+          "text": "make a working notepad",
+          "expected": "notes",
+          "predicted": "notes"
+        },
+        {
+          "text": "make a pomodoro focus app",
+          "expected": "pomodoro",
+          "predicted": "pomodoro"
+        },
+        {
+          "text": "build a countdown timer",
+          "expected": "pomodoro",
+          "predicted": "pomodoro"
+        },
+        {
+          "text": "build a playable snake game",
+          "expected": "snake",
+          "predicted": "snake"
+        },
+        {
+          "text": "make the classic snake arcade game",
+          "expected": "snake",
+          "predicted": "snake"
+        },
+        {
+          "text": "build a portfolio landing page",
+          "expected": "landing",
+          "predicted": "landing"
+        },
+        {
+          "text": "make a responsive homepage",
+          "expected": "landing",
+          "predicted": "landing"
+        },
+        {
+          "text": "build a python script to analyze csv files",
+          "expected": "python_csv",
+          "predicted": "python_csv"
+        },
+        {
+          "text": "make a csv analyzer in python",
+          "expected": "python_csv",
+          "predicted": "python_csv"
+        },
+        {
+          "text": "build a json formatter app",
+          "expected": "json",
+          "predicted": "json"
+        },
+        {
+          "text": "make a tool for validating json",
+          "expected": "json",
+          "predicted": "json"
+        },
+        {
+          "text": "help me debug this function",
+          "expected": "debug",
+          "predicted": "debug"
+        },
+        {
+          "text": "find the error in my code",
+          "expected": "debug",
+          "predicted": "debug"
+        },
+        {
+          "text": "teach me about recursion",
+          "expected": "explain",
+          "predicted": "explain"
+        },
+        {
+          "text": "explain how async functions work",
+          "expected": "explain",
+          "predicted": "explain"
+        }
+      ],
+      "elapsed_seconds": 0.149
+    }
+  ]
+}
